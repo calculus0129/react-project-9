@@ -4,10 +4,24 @@ import classes from './page.module.css';
 import { getMeal } from '@/lib/meals';
 import { notFound } from 'next/navigation';
 
+export async function generateMetadata({params}) {
+    const meal = getMeal(params.mealSlug);
+
+    if (!meal) {
+        notFound(); // stop and show the closest not-found or error page.
+    }
+    
+    return {
+        title: meal.title,
+        description: meal.summary,
+    };
+};
+
 // localhost:3000/meals/~
 export default function MealDetailsPage({ params }) {
     const meal = getMeal(params.mealSlug);
 
+    // also needed because the call in the async generateMetadata function will not affect this part!
     if (!meal) {
         notFound(); // stop and show the closest not-found or error page.
     }
